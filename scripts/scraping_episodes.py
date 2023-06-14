@@ -36,7 +36,7 @@ if __name__ == "__main__":
             continue
         href = gallery_item["href"]
         title = gallery_item["title"]
-        link = f"https://criminalminds.fandom.com/{href}"
+        link = f"https://criminalminds.fandom.com{href}"
         number = gallery_item.text.split(".")[0]
         episode = {
             "series": series,
@@ -45,6 +45,6 @@ if __name__ == "__main__":
             "number": number,
             "link": link,
         }
-        episodes.append("episode")
+        episodes.append(episode)
     with open(args.export_path, "w") as json_file:
         json.dump(episodes, json_file, indent=4)
