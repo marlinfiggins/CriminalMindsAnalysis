@@ -3,8 +3,6 @@ import requests
 from bs4 import BeautifulSoup
 import json
 
-#TODO: Grab aliases, also make sure I'm not doubling up anywhere
-
 # URL of the Criminal Minds criminals wiki page
 CRIMINAL_URL = "https://criminalminds.fandom.com/wiki/List_of_major_criminals"
 DEFAULT_EXPORT_PATH = "../data/criminals.json"
@@ -48,6 +46,7 @@ def parse_criminal_soup(criminal_soup):
         return None
 
     name = _parse_element("name")
+    alias = _parse_element("alias")
     pathologies = _parse_element("path")
     mo = _parse_element("mo")
     victims = _parse_element("victims")
@@ -56,6 +55,8 @@ def parse_criminal_soup(criminal_soup):
 
     if name:
         criminal["name"] = name
+    if alias:
+        criminal["alias"] = alias
     if pathologies:
         criminal["pathologies"] = pathologies
     if mo:
@@ -128,7 +129,9 @@ if __name__ == "__main__":
 
             # Parse criminal soup
             criminal = parse_criminal_soup(criminal_soup)
-            major_criminals.append(criminal)
+            if criminal is not None:
+                criminal["url"] = criminal_url
+                major_criminals.append(criminal)
 
     # Create a JSON file and write the criminals' data to it
     with open(args.export_path, "w") as json_file:
